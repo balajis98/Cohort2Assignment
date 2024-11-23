@@ -41,9 +41,44 @@
  */
   const express = require('express');
   const bodyParser = require('body-parser');
-  
   const app = express();
-  
   app.use(bodyParser.json());
   
-  module.exports = app;
+  const todoList=[{
+    id:"1",
+    title:"wake up",
+    description:"wake up at 8am"
+  }]
+
+  app.get('/todos',(req,res)=>{
+    res.status(200).send(todoList);
+  })
+
+  app.get('/todos/:id',(req,res)=>{
+    const id=req.params.id;
+    res.send(todoList[id-1]);
+  })
+
+  app.post('/todos',(req,res)=>{
+    const todo={id:req.body.id,
+      title:req.body.title,
+      description:req.body.description
+    }
+    todoList.push(todo)
+    res.send('New todo created..!')
+  })
+
+  app.put('/todos/:id',(req,res)=>{
+    const id=req.params.id;
+    todoList[id-1].title=req.body.title;
+    todoList[id-1].description=req.body.description;
+    res.send('todo is updated..!')
+  })
+
+  app.delete('/todos/:id',(req,res)=>{
+    const id=req.params.id;
+    todoList.splice(id-1,1)
+    res.send('todo is deleted..!')
+  })
+app.listen(3000);
+ // module.exports = app;
